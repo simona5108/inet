@@ -1049,6 +1049,20 @@
         linkerFlags = ""
         />
     <feature
+        id = "RipTutorial"
+        name = "RIP routing tutorial"
+        description = "A step-by-step tutorial starting from the basics, and introducing new features and concepts related to RIP routing."
+        initiallyEnabled = "true"
+        requires = "Visualization Ethernet RIP"
+        labels = "tutorial rip routing"
+        nedPackages = "
+		       inet.tutorials.rip
+		      "
+        extraSourceFolders = ""
+        compileFlags = ""
+        linkerFlags = ""
+        />
+    <feature
         id = "RoutingShowcases"
         name = "Routing showcases"
         description = "Showcases that demonstrate routing protocols."
@@ -1322,6 +1336,20 @@
         nedPackages = "
                        inet.showcases.visualizer
                       "
+        extraSourceFolders = ""
+        compileFlags = ""
+        linkerFlags = ""
+        />
+    <feature
+        id = "VisualizationTutorial"
+        name = "Visualization tutorial"
+        description = "A step-by-step tutorial starting from the basics, and introducing new features and concepts related to visualizing state and behavior of communication networks."
+        initiallyEnabled = "true"
+        requires = "Visualization PhysicalEnvironment Ieee80211 IPv4 AODV"
+        labels = "tutorial visualization"
+        nedPackages = "
+		       inet.tutorials.visualization
+		      "
         extraSourceFolders = ""
         compileFlags = ""
         linkerFlags = ""
