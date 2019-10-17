@@ -23,3 +23,6 @@ The following tutorials are available:
    IPv4 Network Configurator <configurator/doc/index>
    Queueing <queueing/doc/index>
    Regression Testing and Fingerprints<fingerprint/doc/index>
+   RIP <rip/doc/index>
+   BGP <bgp/doc/index>
+   OSPF <ospf/doc/index>
