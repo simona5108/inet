@@ -125,6 +125,8 @@ void MediumCanvasVisualizer::initialize(int stage)
             auto networkNode = *it;
             if (isNetworkNode(networkNode) && networkNodeFilter.matches(networkNode)) {
                 auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode);
+                if (networkNodeVisualization == nullptr)
+                    throw cRuntimeError("The NetworkNodeVisualization not found for '%s'", networkNode->getFullPath().c_str());
                 if (displayPowerDensityMaps) {
                     auto powerDensityMapFigure = new HeatMapPlotFigure();
                     powerDensityMapFigure->setTags("signal_power_density_map");
@@ -142,7 +144,6 @@ void MediumCanvasVisualizer::initialize(int stage)
                     powerDensityMapFigures[networkNode] = powerDensityMapFigure;
                 }
                 if (displaySpectrums) {
-                    auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode);
                     auto spectrumFigure = new PlotFigure();
                     spectrumFigure->setTags("signal_spectrum");
                     spectrumFigure->setTooltip("This plot represents the signal spectral power density");
@@ -1011,13 +1012,13 @@ void MediumCanvasVisualizer::handleRadioRemoved(const IRadio *radio)
         invalidDisplay = true;
         auto departureFigure = removeSignalDepartureFigure(radio);
         if (departureFigure != nullptr) {
-            auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode);
-            networkNodeVisualization->removeAnnotation(departureFigure);
+            if (auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode))
+                networkNodeVisualization->removeAnnotation(departureFigure);
         }
         auto arrivalFigure = removeSignalArrivalFigure(radio);
         if (arrivalFigure != nullptr) {
-            auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode);
-            networkNodeVisualization->removeAnnotation(arrivalFigure);
+            if (auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode))
+                networkNodeVisualization->removeAnnotation(arrivalFigure);
         }
         if (displayPowerDensityMaps || displaySpectrums || displaySpectrograms)
             networkNode->unsubscribe(IMobility::mobilityStateChangedSignal, this);
@@ -1070,8 +1071,12 @@ void MediumCanvasVisualizer::handleSignalDepartureStarted(const ITransmission *t
             auto transmitter = transmission->getTransmitter();
             if (!transmitter) return;
             auto figure = getSignalDepartureFigure(transmitter);
+            if (figure == nullptr)
+                throw cRuntimeError("The signal departure figure not found for transmitter");
             auto networkNode = getContainingNode(check_and_cast<const cModule *>(transmitter));
             auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode);
+            if (networkNodeVisualization == nullptr)
+                throw cRuntimeError("Cannot show signal departure started, because network node visualization is not found for '%s'", networkNode->getFullPath().c_str());
             networkNodeVisualization->setAnnotationVisible(figure, true);
             auto labelFigure = check_and_cast<LabeledIconFigure *>(figure)->getLabelFigure();
             if (auto scalarTransmission = dynamic_cast<const ScalarTransmission *>(transmission)) {
@@ -1098,7 +1103,8 @@ void MediumCanvasVisualizer::handleSignalDepartureEnded(const ITransmission *tra
             auto figure = getSignalDepartureFigure(transmitter);
             auto networkNode = getContainingNode(check_and_cast<const cModule *>(transmitter));
             auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode);
-            networkNodeVisualization->setAnnotationVisible(figure, false);
+            if (networkNodeVisualization != nullptr && figure != nullptr)
+                networkNodeVisualization->setAnnotationVisible(figure, false);
         }
     }
 }
@@ -1115,8 +1121,12 @@ void MediumCanvasVisualizer::handleSignalArrivalStarted(const IReception *recept
             auto receiver = reception->getReceiver();
             if (networkNodeFilter.matches(check_and_cast<const cModule *>(receiver))) {
                 auto figure = getSignalArrivalFigure(receiver);
+                if (figure == nullptr)
+                    throw cRuntimeError("Signal arrival figure not found for receiver");
                 auto networkNode = getContainingNode(check_and_cast<const cModule *>(receiver));
                 auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode);
+                if (networkNodeVisualization == nullptr)
+                    throw cRuntimeError("Cannot show signal arrival started, because network node visualization is not found for '%s'", networkNode->getFullPath().c_str());
                 networkNodeVisualization->setAnnotationVisible(figure, true);
                 auto labelFigure = check_and_cast<LabeledIconFigure *>(figure)->getLabelFigure();
                 if (auto scalarReception = dynamic_cast<const ScalarReception *>(reception)) {
@@ -1156,7 +1166,8 @@ void MediumCanvasVisualizer::handleSignalArrivalEnded(const IReception *receptio
                 auto figure = getSignalArrivalFigure(receiver);
                 auto networkNode = getContainingNode(check_and_cast<const cModule *>(receiver));
                 auto networkNodeVisualization = networkNodeVisualizer->findNetworkNodeVisualization(networkNode);
-                networkNodeVisualization->setAnnotationVisible(figure, false);
+                if (networkNodeVisualization != nullptr && figure != nullptr)
+                    networkNodeVisualization->setAnnotationVisible(figure, false);
             }
         }
     }
