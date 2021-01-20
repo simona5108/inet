@@ -126,7 +126,8 @@ extern int evFlags;
 
 } // namespace inet
 
-#include "inet/common/SelfDoc.h"
+// enable/disable SelfDoc:
+// #include "inet/common/SelfDoc.h"
 
 #endif
 
