@@ -131,6 +131,18 @@ inline int TagSet::getTagIndex() const
 template<typename T>
 inline const T *TagSet::findTag() const
 {
+#ifdef __INET_SELFDOC_H
+    {
+        std::ostringstream os;
+        os << "=SelfDoc={ " << SelfDoc::keyVal("module", getSimulation()->getContextModule()->getComponentType()->getFullName())
+           << ", " << SelfDoc::keyVal("action", "TAG")
+           << ", \"details\" : { "
+           << SelfDoc::keyVal("tagAction", "findTag")
+           << ", " << SelfDoc::keyVal("tagType", opp_typename(typeid(T)))
+           << " } }";
+        globalSelfDoc.insert(os.str());
+    }
+#endif // __INET_SELFDOC_H
     int index = getTagIndex<T>();
     return index == -1 ? nullptr : static_cast<T *>((*tags)[index]);
 }
@@ -144,6 +156,18 @@ inline T *TagSet::findTagForUpdate()
 template<typename T>
 inline const T *TagSet::getTag() const
 {
+#ifdef __INET_SELFDOC_H
+    {
+        std::ostringstream os;
+        os << "=SelfDoc={ " << SelfDoc::keyVal("module", getSimulation()->getContextModule()->getComponentType()->getFullName())
+           << ", " << SelfDoc::keyVal("action", "TAG")
+           << ", \"details\" : { "
+           << SelfDoc::keyVal("tagAction", "getTag")
+           << ", " << SelfDoc::keyVal("tagType", opp_typename(typeid(T)))
+           << " } }";
+        globalSelfDoc.insert(os.str());
+    }
+#endif // __INET_SELFDOC_H
     int index = getTagIndex<T>();
     if (index == -1)
         throw cRuntimeError("Tag '%s' is absent", opp_typename(typeid(T)));
@@ -159,6 +183,18 @@ inline T *TagSet::getTagForUpdate()
 template<typename T>
 inline T *TagSet::addTag()
 {
+#ifdef __INET_SELFDOC_H
+    {
+        std::ostringstream os;
+        os << "=SelfDoc={ " << SelfDoc::keyVal("module", getSimulation()->getContextModule()->getComponentType()->getFullName())
+           << ", " << SelfDoc::keyVal("action", "TAG")
+           << ", \"details\" : { "
+           << SelfDoc::keyVal("tagAction", "addTag")
+           << ", " << SelfDoc::keyVal("tagType", opp_typename(typeid(T)))
+           << " } }";
+        globalSelfDoc.insert(os.str());
+    }
+#endif // __INET_SELFDOC_H
     int index = getTagIndex<T>();
     if (index != -1)
         throw cRuntimeError("Tag '%s' is present", opp_typename(typeid(T)));
@@ -170,15 +206,41 @@ inline T *TagSet::addTag()
 template<typename T>
 inline T *TagSet::addTagIfAbsent()
 {
-    T *tag = findTagForUpdate<T>();
-    if (tag == nullptr)
-        addTag(tag = new T());
+#ifdef __INET_SELFDOC_H
+    {
+        std::ostringstream os;
+        os << "=SelfDoc={ " << SelfDoc::keyVal("module", getSimulation()->getContextModule()->getComponentType()->getFullName())
+           << ", " << SelfDoc::keyVal("action", "TAG")
+           << ", \"details\" : { "
+           << SelfDoc::keyVal("tagAction", "addTagIfAbsent")
+           << ", " << SelfDoc::keyVal("tagType", opp_typename(typeid(T)))
+           << " } }";
+        globalSelfDoc.insert(os.str());
+    }
+#endif // __INET_SELFDOC_H
+    int index = getTagIndex<T>();
+    if (index != -1)
+        return static_cast<T *>((*tags)[index]);
+    T *tag = new T();
+    addTag(tag);
     return tag;
 }
 
 template<typename T>
 inline T *TagSet::removeTag()
 {
+#ifdef __INET_SELFDOC_H
+    {
+        std::ostringstream os;
+        os << "=SelfDoc={ " << SelfDoc::keyVal("module", getSimulation()->getContextModule()->getComponentType()->getFullName())
+           << ", " << SelfDoc::keyVal("action", "TAG")
+           << ", \"details\" : { "
+           << SelfDoc::keyVal("tagAction", "removeTag")
+           << ", " << SelfDoc::keyVal("tagType", opp_typename(typeid(T)))
+           << " } }";
+        globalSelfDoc.insert(os.str());
+    }
+#endif // __INET_SELFDOC_H
     int index = getTagIndex<T>();
     if (index == -1)
         throw cRuntimeError("Tag '%s' is absent", opp_typename(typeid(T)));
@@ -188,6 +250,18 @@ inline T *TagSet::removeTag()
 template<typename T>
 inline T *TagSet::removeTagIfPresent()
 {
+#ifdef __INET_SELFDOC_H
+    {
+        std::ostringstream os;
+        os << "=SelfDoc={ " << SelfDoc::keyVal("module", getSimulation()->getContextModule()->getComponentType()->getFullName())
+           << ", " << SelfDoc::keyVal("action", "TAG")
+           << ", \"details\" : { "
+           << SelfDoc::keyVal("tagAction", "removeTagIfPresent")
+           << ", " << SelfDoc::keyVal("tagType", opp_typename(typeid(T)))
+           << " } }";
+        globalSelfDoc.insert(os.str());
+    }
+#endif // __INET_SELFDOC_H
     int index = getTagIndex<T>();
     return index == -1 ? nullptr : static_cast<T *>(removeTag(index));
 }

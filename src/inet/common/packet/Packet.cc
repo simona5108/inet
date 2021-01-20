@@ -154,6 +154,22 @@ void Packet::insertAt(const Ptr<const Chunk>& chunk, b offset)
     CHUNK_CHECK_USAGE(chunk != nullptr, "chunk is nullptr");
     CHUNK_CHECK_USAGE(chunk->getChunkLength() > b(0), "chunk is empty");
     CHUNK_CHECK_USAGE(b(0) <= offset && offset <= totalLength, "offset is out of range");
+
+#ifdef __INET_SELFDOC_H
+    {
+        std::ostringstream os;
+        const char * action = (offset == getFrontOffset()) ? "insertAtFront" : (offset == getBackOffset()) ? "insertAtBack" : "insertAt";
+        auto p = chunk.get();
+        os << "=SelfDoc={ " << SelfDoc::keyVal("module", getSimulation()->getContextModule()->getComponentType()->getFullName())
+           << ", " << SelfDoc::keyVal("action", "PACKET")
+           << ", \"details\" : { "
+           << SelfDoc::keyVal("packetAction", action)
+           << ", " << SelfDoc::keyVal("chunkType", opp_typename(typeid(*p)))
+           << " } }";
+        globalSelfDoc.insert(os.str());
+    }
+#endif // __INET_SELFDOC_H
+
     constPtrCast<Chunk>(chunk)->markImmutable();
     if (content == EmptyChunk::singleton)
         content = chunk;
