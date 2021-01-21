@@ -45,6 +45,7 @@ class SelfDoc
 extern SelfDoc globalSelfDoc;
 
 #undef Enter_Method
+// TODO add module relative path when caller and call to are in same networkNode
 #define Enter_Method(...) \
         auto __from = getSimulation()->getContext(); \
         omnetpp::cMethodCallContextSwitcher __ctx(this); \
@@ -54,14 +55,15 @@ extern SelfDoc globalSelfDoc;
             os << "=SelfDoc={ " << SelfDoc::keyVal("module", __from ? __from->getComponentType()->getFullName() : "-=unknown=-") \
                << ", " << SelfDoc::keyVal("action","CALL") \
                << ", " << SelfDoc::val("details") << " : { " \
-               << SelfDoc::keyVal("callto", this->getComponentType()->getFullName()) \
-               << ", " << SelfDoc::keyVal("func", std::string(opp_typename(typeid(*this))) + "::" + __func__) \
+               << SelfDoc::keyVal("call to", this->getComponentType()->getFullName()) \
+               << ", " << SelfDoc::keyVal("function", std::string(opp_typename(typeid(*this))) + "::" + __func__) \
                << ", " << SelfDoc::keyVal("info", SelfDoc::enterMethodInfo(__VA_ARGS__)) \
                << " } }"; \
             globalSelfDoc.insert(os.str()); \
         }
 
 #undef Enter_Method_Silent
+// TODO add module relative path when caller and call to are in same networkNode
 #define Enter_Method_Silent(...) \
     auto __from = getSimulation()->getContext(); \
     omnetpp::cMethodCallContextSwitcher __ctx(this); \
@@ -71,8 +73,8 @@ extern SelfDoc globalSelfDoc;
        os << "=SelfDoc={ " << SelfDoc::keyVal("module", __from ? __from->getComponentType()->getFullName() : "-=unknown=-") \
           << ", " << SelfDoc::keyVal("action","CALL") \
           << ", " << SelfDoc::val("details") << " : { " \
-          << SelfDoc::keyVal("callto", this->getComponentType()->getFullName()) \
-          << ", " << SelfDoc::keyVal("func", std::string(opp_typename(typeid(*this))) + "::" + __func__) \
+          << SelfDoc::keyVal("call to", this->getComponentType()->getFullName()) \
+          << ", " << SelfDoc::keyVal("function", std::string(opp_typename(typeid(*this))) + "::" + __func__) \
           << ", " << SelfDoc::keyVal("info", SelfDoc::enterMethodInfo(__VA_ARGS__)) \
           << " } }"; \
         globalSelfDoc.insert(os.str()); \

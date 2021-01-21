@@ -23,6 +23,8 @@
 
 namespace inet {
 
+#ifdef __INET_SELFDOC_H
+
 SelfDoc globalSelfDoc;
 
 SelfDoc::~SelfDoc() noexcept(false)
@@ -85,6 +87,8 @@ std::string SelfDoc::val(const char *str)
     os << '"';
     return os.str();
 }
+
+#endif // __INET_SELFDOC_H
 
 } // namespace inet
 
