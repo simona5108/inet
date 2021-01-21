@@ -1518,5 +1518,16 @@
         compileFlags = ""
         linkerFlags = ""
         />
-
+    <feature
+        id = "SelfDoc"
+        name = "Self documenter"
+        description = "For generating documentation based on runtime actions."
+        initiallyEnabled = "false"
+        requires = ""
+        labels = ""
+        nedPackages = ""
+        extraSourceFolders = ""
+        compileFlags = "-DINET_WITH_SELFDOC"
+        linkerFlags = ""
+        />
 </features>
