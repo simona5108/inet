@@ -369,6 +369,23 @@ void MacAddressTable::readAddressTable(const char *fileName)
 void MacAddressTable::initializeTable()
 {
     clearTable();
+    // using module parameter
+    auto addressTable = check_and_cast<cValueArray *>(par("addressTable").objectValue());
+    for (int i = 0; i < addressTable->size(); i++) {
+        cValueMap *entry = check_and_cast<cValueMap *>(addressTable->get(i).objectValue());
+        auto vlan = entry->containsKey("vlan") ? entry->get("vlan").intValue() : 0;
+        auto macAddressString = entry->get("address").stringValue();
+        L3Address l3Address;
+        if (!L3AddressResolver().tryResolve(macAddressString, l3Address, L3AddressResolver::ADDR_MAC))
+            throw cRuntimeError("Cannot resolve MAC address of '%s'", macAddressString);
+        MacAddress macAddress = l3Address.toMac();
+        auto interfaceName = entry->get("interface").stringValue();
+        auto networkInterface = ifTable->findInterfaceByName(interfaceName);
+        if (networkInterface == nullptr)
+            throw cRuntimeError("Cannot find network interface '%s'", interfaceName);
+        updateTableWithAddress(networkInterface->getInterfaceId(), macAddress, vlan);
+    }
+
     // Option to pre-read in Address Table. To turn it off, set addressTableFile to empty string
     const char *addressTableFile = par("addressTableFile");
     if (addressTableFile && *addressTableFile)

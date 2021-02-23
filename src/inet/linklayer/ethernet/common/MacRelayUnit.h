@@ -25,6 +25,7 @@ namespace inet {
 class INET_API MacRelayUnit : public MacRelayUnitBase
 {
   protected:
+    virtual void handleUpperPacket(Packet *packet) override;
     virtual void handleLowerPacket(Packet *packet) override;
 };
 
