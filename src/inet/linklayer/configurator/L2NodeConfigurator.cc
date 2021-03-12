@@ -71,6 +71,8 @@ void L2NodeConfigurator::prepareInterface(NetworkInterface *networkInterface)
 {
 //    ASSERT(!networkInterface->getProtocolData<Ieee8021dInterfaceData>());
     networkInterface->addProtocolData<Ieee8021dInterfaceData>();
+    networkInterface->addProtocolData<MstpPortData<CistPortData>>();
+    networkInterface->addProtocolData<MstpPortData<MstiPortData>>();
 }
 
 void L2NodeConfigurator::configureNode()

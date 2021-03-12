@@ -27,6 +27,7 @@
 #include "inet/common/packet/Packet.h"
 #include "inet/linklayer/common/InterfaceTag_m.h"
 #include "inet/linklayer/configurator/Ieee8021dInterfaceData.h"
+#include "inet/linklayer/ieee8021s/configurator/MstpPortData.h"
 
 #ifdef INET_WITH_IPv4
 #include "inet/networklayer/ipv4/Ipv4InterfaceData.h"

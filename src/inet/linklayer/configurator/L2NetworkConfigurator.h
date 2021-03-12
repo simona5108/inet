@@ -25,6 +25,7 @@
 #include "inet/common/Topology.h"
 #include "inet/linklayer/configurator/Ieee8021dInterfaceData.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
+#include "inet/linklayer/ieee8021s/configurator/MstpPortData.h"
 
 namespace inet {
 
